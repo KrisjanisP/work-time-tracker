@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Work Time Tracker</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-iYQeCzEYFbKjA/T2uDLTpkwGzCiq6soy8tYaI1GyVh/UjpbCx/TYkiZhlZB6+fzT" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
+</head>
+
+<body>
+  <div class="container d-flex flex-column align-items-center border my-4 p-3">
+    <h1>Work Time Tracker</h1>
+    <p>by Krišjānis for Petručeņa</p>
+    <div>Current time: <span id="digital-clock">00:00:00</span></div>
+    
+    <br>
+
+    <div class="input-group mb-3">
+      <input id="task-description" type="text" class="form-control" placeholder="Task Description">
+      <select id="selected-work" class="form-select">
+        <option selected>Choose Work</option>
+        <option value="LU MII">LU MII</option>
+        <option value="LU MD">LU MD</option>
+        <option value="PPS">PPS</option>
+      </select>
+      <button id="start-sw-btn" onclick="start_sw()" type="button" class="btn btn-success">
+        Start <i class="bi bi-play-circle"></i>
+      </button>
+    </div>
+  
+    <div class="input-group mb-3">
+      <input id="task-description" type="text" class="form-control" placeholder="Task Description">
+      <span id="current-work" class="form-control">LU MII</span>
+      <button id="pause-sw-btn" onclick="pause_sw()" type="button" class="btn btn-warning">
+        Pause <i class="bi bi-pause-circle"></i>
+      </button>
+      <button id="stop-sw-btn" onclick="stop_sw()" type="button" class="btn btn-danger">
+        Stop <i class="bi bi-stop-circle"></i>
+      </button>
+    </div>
+  
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-u1OknCvxWvY5kfmNBILK2hRnQC3Pr17a+RTT6rIHI7NnikvbZlHgTPOOmMi466C8"
+    crossorigin="anonymous"></script>
+  <script src="/stopwatch.js"></script>
+</body>
+
+</html>
