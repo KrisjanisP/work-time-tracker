@@ -1,60 +1,66 @@
-function showTime() {
-    var date = new Date();
-    var h = date.getHours(); // 0 - 23
-    var m = date.getMinutes(); // 0 - 59
-    var s = date.getSeconds(); // 0 - 59
-
+function HMS_to_military(h,m,s) {
     h = (h < 10) ? "0" + h : h;
     m = (m < 10) ? "0" + m : m;
     s = (s < 10) ? "0" + s : s;
 
     var time = h + ":" + m + ":" + s ;
+
+    return time;
+}
+
+function date_to_military(date) {
+    var h = date.getHours(); // 0 - 23
+    var m = date.getMinutes(); // 0 - 59
+    var s = date.getSeconds(); // 0 - 59
+    return HMS_to_military(h,m,s);
+}
+
+function milliseconds_to_miliary(milliseconds) {
+    let seconds = Math.floor(milliseconds/1000);
+    let s = seconds%60;
+    seconds -= s;
+    let minutes = Math.floor(seconds/60);
+    let m = minutes%60;
+    minutes -= m;
+    let h = Math.floor(minutes/60);
+    return HMS_to_military(h,m,s);
+}
+
+function show_time() {
+    let date = new Date();
     
+    let time = date_to_military(date);
+
     document.getElementById("digital-clock").innerText = time;
     document.getElementById("digital-clock").textContent = time;
 
-    setTimeout(showTime, 1000);
+    setTimeout(show_time, 1000);
 
 }
 
-showTime();
+show_time();
 
-let started = false;
+var started = false;
+var startedDate;
+var intervalId;
 
-function toggleStopwatch() {
-    btn = document.getElementById('stopwatch-btn')
-    work_select = document.getElementById('selected-work');
-    curr_work = document.getElementById('current-work');
-    task_desc = document.getElementById('task-description');
+function upd_elapsed_time() {
+    let time = milliseconds_to_miliary(new Date() - startedDate);
+    document.getElementById("time-elapsed").innerText = time;
+    document.getElementById("time-elapsed").textContent = time;
+}
 
-    if(started) {
-        // STOP the stopwatch
-        btn.classList.remove('btn-danger');
-        btn.classList.add('btn-success');
-        btn.innerText = "Start";
+function start_sw() {
+    startedDate = new Date();
+    intervalId = setInterval(upd_elapsed_time,1000)
+}
 
-        // show work selector
-        work_select.classList.remove('d-none');
-        // hide current work
-        curr_work.classList.add('d-none');
+function pause_sw() {
+    
+}
 
-        task_desc.readOnly = false;
-
-        started = false;
-    } else {
-        // START the stopwatch
-        btn.classList.remove('btn-success');
-        btn.classList.add('btn-danger');
-        btn.innerText = "Stop ";
-
-        // hide work selector
-        work_select.classList.add('d-none');
-
-        // show current work
-        curr_work.classList.remove('d-none');
-        curr_work.innerText = work_select.value;
-
-        task_desc.readOnly = true;
-        started = true;
-    }
+function stop_sw() {
+    document.getElementById("time-elapsed").innerText = "00:00:00";
+    document.getElementById("time-elapsed").textContent = "00:00:00";
+    clearInterval(intervalId);
 }
