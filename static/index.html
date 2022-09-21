@@ -20,7 +20,7 @@
 
     <div class="input-group mb-3">
       <input id="task-description" type="text" class="form-control" placeholder="Task Description">
-      <select id="selected-work" class="form-select">
+      <select id="selected-work" class="form-select flex-grow-0 w-auto">
         <option selected>Choose Work</option>
         <option value="LU MII">LU MII</option>
         <option value="LU MD">LU MD</option>
@@ -32,9 +32,11 @@
     </div>
   
     <div class="input-group mb-3">
-      <div class="form-control">Elapsed: <span id="time-elapsed">00:00:00</span></div>
+      <div class="form-control flex-grow-0 w-auto">
+        Elapsed: <span id="time-elapsed">00:00:00</span>
+      </div>
       <input id="task-description" type="text" class="form-control" placeholder="Task Description">
-      <span id="current-work" class="form-control">LU MII</span>
+      <span id="current-work" class="form-control flex-grow-0 w-auto">LU MII</span>
       <button id="pause-sw-btn" onclick="pause_sw()" type="button" class="btn btn-warning">
         Pause <i class="bi bi-pause-circle"></i>
       </button>
