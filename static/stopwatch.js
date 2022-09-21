@@ -40,8 +40,8 @@ function show_time() {
 
 show_time();
 
-var started = false;
-var startedDate;
+var started = false, startedDate;
+var paused = false, pausedDate, pausedTime = 0;
 var intervalId;
 
 var inactiveInput = document.getElementById('inactive-input');
@@ -50,9 +50,10 @@ var pauseBtn = document.getElementById('pause-sw-btn');
 var unpauseBtn = document.getElementById('unpause-sw-btn');
 
 function upd_elapsed_time() {
-    let time = milliseconds_to_miliary(new Date() - startedDate);
-    document.getElementById("time-elapsed").innerText = time;
-    document.getElementById("time-elapsed").textContent = time;
+    let time = new Date() - startedDate - pausedTime;
+    let timeText = milliseconds_to_miliary(time);
+    document.getElementById("time-elapsed").innerText = timeText;
+    document.getElementById("time-elapsed").textContent = timeText;
 }
 
 function start_sw() {
@@ -60,16 +61,21 @@ function start_sw() {
     intervalId = setInterval(upd_elapsed_time,1000)
     inactiveInput.classList.add('d-none');
     activeInput.classList.remove('d-none');
+    pausedTime = 0;
 }
 
 function pause_sw() {
+    pausedDate = new Date();
     pauseBtn.classList.add('d-none');
     unpauseBtn.classList.remove('d-none');
+    clearInterval(intervalId);
 }
 
 function unpause_sw() {
     pauseBtn.classList.remove('d-none');
     unpauseBtn.classList.add('d-none');
+    pausedTime += new Date() - pausedDate;
+    intervalId = setInterval(upd_elapsed_time,1000);
 }
 
 function stop_sw() {
