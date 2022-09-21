@@ -18,7 +18,7 @@
     
     <br>
 
-    <div class="input-group mb-3">
+    <div id="inactive-input" class="input-group mb-3">
       <input id="task-description" type="text" class="form-control" placeholder="Task Description">
       <select id="selected-work" class="form-select flex-grow-0 w-auto">
         <option selected>Choose Work</option>
@@ -30,8 +30,8 @@
         Start <i class="bi bi-play-circle"></i>
       </button>
     </div>
-  
-    <div class="input-group mb-3">
+
+    <div id="active-input" class="input-group mb-3 d-none">
       <div class="form-control flex-grow-0 w-auto">
         Elapsed: <span id="time-elapsed">00:00:00</span>
       </div>
@@ -39,6 +39,9 @@
       <span id="current-work" class="form-control flex-grow-0 w-auto">LU MII</span>
       <button id="pause-sw-btn" onclick="pause_sw()" type="button" class="btn btn-warning">
         Pause <i class="bi bi-pause-circle"></i>
+      </button>
+      <button id="unpause-sw-btn" onclick="unpause_sw()" type="button" class="btn btn-success d-none">
+        Unpause <i class="bi bi-play-circle"></i>
       </button>
       <button id="stop-sw-btn" onclick="stop_sw()" type="button" class="btn btn-danger">
         Stop <i class="bi bi-stop-circle"></i>

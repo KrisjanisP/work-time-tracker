@@ -44,6 +44,11 @@ var started = false;
 var startedDate;
 var intervalId;
 
+var inactiveInput = document.getElementById('inactive-input');
+var activeInput = document.getElementById('active-input');
+var pauseBtn = document.getElementById('pause-sw-btn');
+var unpauseBtn = document.getElementById('unpause-sw-btn');
+
 function upd_elapsed_time() {
     let time = milliseconds_to_miliary(new Date() - startedDate);
     document.getElementById("time-elapsed").innerText = time;
@@ -53,14 +58,25 @@ function upd_elapsed_time() {
 function start_sw() {
     startedDate = new Date();
     intervalId = setInterval(upd_elapsed_time,1000)
+    inactiveInput.classList.add('d-none');
+    activeInput.classList.remove('d-none');
 }
 
 function pause_sw() {
-    
+    pauseBtn.classList.add('d-none');
+    unpauseBtn.classList.remove('d-none');
+}
+
+function unpause_sw() {
+    pauseBtn.classList.remove('d-none');
+    unpauseBtn.classList.add('d-none');
 }
 
 function stop_sw() {
     document.getElementById("time-elapsed").innerText = "00:00:00";
     document.getElementById("time-elapsed").textContent = "00:00:00";
     clearInterval(intervalId);
+
+    inactiveInput.classList.remove('d-none');
+    activeInput.classList.add('d-none');
 }
