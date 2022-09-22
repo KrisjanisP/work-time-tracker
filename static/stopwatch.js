@@ -105,77 +105,21 @@ function edit_entry(entryId) {
     entryDeleteBtn.classList.remove('d-none');
 }
 
-function save_entry(entryId) {
-    console.log("save "+entryId)
-    
-}
-
-function delete_entry(entryId) {
-    console.log("delete "+entryId);
-}
-
 var mainContainer = document.getElementById('main-container');
 
-function append_entry(entry) {
-    console.log(entry.id);
-    mainContainer.innerHTML += `
-        <div id="entry-${entry.id}" class="input-group mb-3">
-            <div class="form-control flex-grow-0 w-auto">
-                Elapsed: ${milliseconds_to_miliary(entry.elapsed)}
-            </div>
-            <span type="text" class="form-control">
-                ${entry.desc}
-            </span>
-            <span class="form-control flex-grow-0 w-auto">
-                ${entry.work}
-            </span>
-            <button id="edit-entry-${entry.id}" onclick="edit_entry(${entry.id})" type="button" class="btn btn-secondary">
-                Edit <i class="bi bi-pencil"></i>
-            </button>
-        </div>
-        <div id="entry-${entry.id}" class="input-group mb-3">
-            <input type="text" class="form-control" value="34:00:21">
-            <input type="text" class="form-control" value="${entry.desc}">
-            </input>
-            <select id="selected-work" class="form-select flex-grow-0 w-auto">
-                <option value="LU MII">LU MII</option>
-                <option value="LU MD">LU MD</option>
-                <option value="PPS">PPS</option>
-            </select>
-            <button id="save-entry-${entry.id}" onclick="save_entry(${entry.id})" type="button" class="btn btn-primary">
-                Save <i class="bi bi-save"></i>
-            </button>
-            <button id="delete-entry-${entry.id}" onclick="delete_entry(${entry.id})" type="button" class="btn btn-danger">
-                Delete <i class="bi bi-trash"></i>
-            </button    >
-        </div>
-    `;
-}
-
-function displayPrevTasks() {
-    tasks = [
-        {
-            id: 0,
-            desc: "12345",
-            elapsed: 123441237,
-            work: "PPS"
-        },
-        {
-            id: 1,
-            desc: "12341231231321235",
-            elapsed: 12341237,
-            work: "LU"
-        },
-        {
-            id: 2,
-            desc: "11231232345",
-            elapsed: 1231237,
-            work: "MII"
-        }
-    ]
-    for (let entry of tasks) {
-        append_entry(entry);
+function stopwatch_entry(props) {
+    return {
+        $template: '#entry-template',
+        time: props.time,
+        before: "3 days",
+        desc: "1234",
+        work: "PPS"
     }
 }
-for(let i=0;i<1;i++)
-    displayPrevTasks();
+
+function edit_sw_entry(props) {
+    return {
+        $template: '#edit-template',
+
+    }
+}
