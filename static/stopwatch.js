@@ -108,6 +108,7 @@ function edit_entry(entryId) {
 var mainContainer = document.getElementById('main-container');
 
 function stopwatch_entry(props) {
+    console.log('hello1');
     return {
         $template: '#entry-template',
         time: props.time,
@@ -118,8 +119,11 @@ function stopwatch_entry(props) {
 }
 
 function edit_sw_entry(props) {
+    console.log('hello2');
     return {
         $template: '#edit-template',
-
+        time: "11:22:33",
+        started: "2022-09-22T17:26",
+        desc: props.desc
     }
 }
