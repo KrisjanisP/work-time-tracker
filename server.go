@@ -14,16 +14,16 @@ const dbFile string = "./data/data.db"
 
 var db *sql.DB
 
-type Task struct {
-	t_id      int
-	t_desc    string
-	t_elapsed int64 // in milliseconds'
-	t_work_id int
+type Entry struct {
+	desc  string
+	time  int
+	start int
+	work  string
 }
 
-func InsertTask(db *sql.DB, task Task) (int, error) {
-	res, err := db.Exec("INSERT INTO tasks VALUES(NULL,?,?,?);",
-		task.t_desc, task.t_elapsed, task.t_work_id)
+func InsertTask(db *sql.DB, entry Entry) (int, error) {
+	res, err := db.Exec("INSERT INTO entries VALUES(NULL,?,?,?,?);",
+		entry.desc, entry.time, entry.start, entry.work)
 
 	if err != nil {
 		return 0, err
@@ -43,7 +43,7 @@ func main() {
 	db, err = sql.Open("sqlite3", dbFile)
 	handleFatalErr(err)
 
-	id, err := InsertTask(db, Task{0, "123", 123, 1})
+	id, err := InsertTask(db, Entry{"123", 123123, 1234121231, "PPS"})
 	fmt.Println(id)
 	handleFatalErr(err)
 
