@@ -7,7 +7,6 @@ import (
 )
 
 type Entry struct {
-	gorm.Model
 	ID          uint `gorm:"primarykey"`
 	CreatedAt   int
 	UpdatedAt   int
