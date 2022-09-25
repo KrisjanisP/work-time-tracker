@@ -1,59 +1,71 @@
 package main
 
 import (
-	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
+	"os"
+	"strconv"
+	"text/template"
 
-	_ "github.com/mattn/go-sqlite3"
+	"github.com/KrisjanisP/work-time-tracker/database"
 )
 
 const addr string = ":3000"
-const dbFile string = "./data/data.db"
-
-var db *sql.DB
-
-type Entry struct {
-	desc  string
-	time  int
-	start int
-	work  string
-}
-
-func InsertTask(db *sql.DB, entry Entry) (int, error) {
-	res, err := db.Exec("INSERT INTO entries VALUES(NULL,?,?,?,?);",
-		entry.desc, entry.time, entry.start, entry.work)
-
-	if err != nil {
-		return 0, err
-	}
-
-	var id int64
-	if id, err = res.LastInsertId(); err != nil {
-		return 0, err
-	}
-
-	return int(id), nil
-}
+const dbPath string = "./database/data.db"
 
 func main() {
-
 	var err error
-	db, err = sql.Open("sqlite3", dbFile)
-	handleFatalErr(err)
-
-	id, err := InsertTask(db, Entry{"123", 123123, 1234121231, "PPS"})
-	fmt.Println(id)
-	handleFatalErr(err)
-
-	http.Handle("/", http.FileServer(http.Dir("./static")))
-	err = http.ListenAndServe(addr, nil)
-	handleFatalErr(err)
-}
-
-func handleFatalErr(err error) {
+	err = database.Open(dbPath)
 	if err != nil {
 		log.Fatalln(err)
 	}
+
+	http.HandleFunc("/", serveIndex)
+	http.HandleFunc("/submit", handleSubmit)
+
+	log.Printf("Listening on %s", addr)
+	err = http.ListenAndServe(addr, nil)
+	if err != nil {
+		log.Fatalln(err)
+	}
+}
+
+func serveIndex(w http.ResponseWriter, r *http.Request) {
+	tmpl, err := template.ParseFS(os.DirFS("./templates"), "*")
+
+	if err != nil {
+		// log the detailed error
+		log.Println(err.Error())
+		// return a generic "Internal Server Error" message
+		http.Error(w, http.StatusText(500), 500)
+		return
+	}
+
+	err = tmpl.ExecuteTemplate(w, "layout", nil)
+	if err != nil {
+		log.Println(err.Error())
+		http.Error(w, http.StatusText(500), 500)
+	}
+}
+
+func handleSubmit(w http.ResponseWriter, r *http.Request) {
+	r.ParseForm()
+	log.Println(r.Form)
+
+	seconds, err := strconv.Atoi(r.Form.Get("seconds"))
+	started, err := strconv.Atoi(r.Form.Get("started"))
+	if err != nil {
+		http.Error(w, http.StatusText(500), 500)
+	}
+	description := r.Form.Get("description")
+	work := r.Form.Get("work")
+
+	database.DB.Create(
+		&database.Entry{
+			Description: description,
+			Seconds:     seconds,
+			Started:     started,
+			Work:        work,
+		})
+	http.Redirect(w, r, "/", http.StatusSeeOther)
 }

@@ -1,0 +1,60 @@
+{{define "entry-history"}}
+<template id="entry-template">
+    <div class="input-group mb-3">
+        <div class="form-control flex-grow-0 w-auto">
+        Time: 
+        </div>
+        <div class="form-control flex-grow-0 w-auto">
+        Started: 
+        </div>
+        <span type="text" class="form-control">
+        Description: 
+        </span>
+        <span class="form-control flex-grow-0 w-auto">
+        
+        </span>
+        <button @click="hello" type="button" class="btn btn-secondary">
+        Edit <i class="bi bi-pencil"></i>
+        </button>
+    </div>
+</template>
+
+<template id="edit-template">
+    <form class="row border g-3 m-0 p-2">
+        <div class="col-md-6">
+        <label>Time (hh:mm:ss): </label>
+        <input type="text" class="form-control" v-model="time" contenteditable>
+        </div>
+
+        <div class="col-md-6">
+        <label>Started: </label>
+        <input type="datetime-local" class="form-control" v-model="started">
+        </div>
+
+        <div class="col-md-12">
+        <label>Description: </label>
+        <input type="text" class="form-control" v-model="desc">
+        </div>
+
+        <div class="col-md-12">
+        <label>Work: </label>
+        <select id="selected-work" class="form-select">
+            <option value="LU MII">LU MII</option>
+            <option value="LU MD">LU MD</option>
+            <option value="PPS">PPS</option>
+        </select>
+        </div>
+
+        <div class="col-md-6 d-grid mt-4">
+        <button id="save-entry-${entry.id}" type="button" class="btn btn-primary">
+            Save <i class="bi bi-save"></i>
+        </button>
+        </div>
+        <div class="col-md-6 d-grid mt-4">
+        <button id="delete-entry-${entry.id}" type="button" class="btn btn-danger">
+            Delete <i class="bi bi-trash"></i>
+        </button>
+        </div>
+    </form>
+</template>
+{{end}}
