@@ -21,7 +21,6 @@ func main() {
 	}
 
 	http.HandleFunc("/", serveIndex)
-	http.HandleFunc("/submit", handleSubmit)
 
 	log.Printf("Listening on %s", addr)
 	err = http.ListenAndServe(addr, nil)
@@ -31,6 +30,11 @@ func main() {
 }
 
 func serveIndex(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodPost {
+		handleSubmit(w, r)
+		return
+	}
+
 	tmpl, err := template.ParseFS(os.DirFS("./templates"), "*")
 
 	if err != nil {

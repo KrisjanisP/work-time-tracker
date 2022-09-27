@@ -1,42 +1,46 @@
 {{define "active-entry"}}
 
-<div id="inactive-input" class="input-group mb-3">
-    <input id="description-inactive" type="text" class="form-control" placeholder="Task Description">
-    <select id="selected-work" class="form-select flex-grow-0 w-auto">
-        <option selected>Choose Work</option>
-        <option value="LU MII">LU MII</option>
-        <option value="LU MD">LU MD</option>
-        <option value="PPS">PPS</option>
-    </select>
-    <button id="start-sw-btn" onclick="start_sw()" type="button" class="btn btn-success">
-        Start <i class="bi bi-play-circle"></i>
-    </button>
+<div class="w-100" v-scope>
+    <div class="input-group mb-3" v-if="!started">
+        <input v-model="description" type="text" class="form-control" placeholder="Task Description">
+        <select v-model="work" class="form-select flex-grow-0 w-auto">
+            <option value="LU MII">LU MII</option>
+            <option value="LU MD">LU MD</option>
+            <option value="PPS">PPS</option>
+        </select>
+        <button id="start-sw-btn" @click="started=true;" type="button" class="btn btn-success">
+            Start <i class="bi bi-play-circle"></i>
+        </button>
+    </div>
+
+    <form class="input-group mb-3 d-none" action="/" method="post" @vue:mounted="$el.classList.remove('d-none')" v-if="started">
+        <!-- Elapsed Time -->
+        <div class="form-control flex-grow-0 w-auto"> Elapsed: <span id="time-elapsed">00:00:00</span> </div>
+        <input id="seconds-submit" type="hidden" name="seconds" value="0">
+
+        <!-- Task Description -->
+        <input v-model="description" type="text" class="form-control" placeholder="Task Description" name="description">
+        
+        <!-- Chosen Work -->
+        <span class="form-control flex-grow-0 w-auto">${work}</span>
+        <input v-model="work" type="hidden" name="work">
+
+        <!-- Started -->
+        <input id="started-submit" type="hidden" name="started" value="">
+        <button id="pause-sw-btn" onclick="pause_sw()" type="button" class="btn btn-warning">
+            Pause <i class="bi bi-pause-circle"></i>
+        </button>
+        <button id="unpause-sw-btn" onclick="unpause_sw()" type="button" class="btn btn-success d-none">
+            Unpause <i class="bi bi-play-circle"></i>
+        </button>
+        <button id="submit-sw-btn" type="submit" class="btn btn-primary">
+            Save <i class="bi bi-save"></i>
+        </button>
+        <button id="stop-sw-btn" @click="started=false;" type="button" class="btn btn-danger d-none">
+            Cancel <i class="bi bi-stop-circle"></i>
+        </button>
+    </form>
 </div>
-
-<form id="active-input" class="input-group mb-3 d-none" action="/submit">
-    <!-- Elapsed Time -->
-    <div class="form-control flex-grow-0 w-auto"> Elapsed: <span id="time-elapsed">00:00:00</span> </div>
-    <input id="seconds-submit" type="hidden" name="seconds" value="0">
-
-    <!-- Task Description -->
-    <input id="description-active" type="text" class="form-control" placeholder="Task Description" name="description">
-    
-    <!-- Chosen Work -->
-    <span id="work" class="form-control flex-grow-0 w-auto">LU MII</span>
-    <input id="work-submit" type="hidden" name="work" value="">
-
-    <!-- Started -->
-    <input id="started-submit" type="hidden" name="started" value="">
-    <button id="pause-sw-btn" onclick="pause_sw()" type="button" class="btn btn-warning">
-        Pause <i class="bi bi-pause-circle"></i>
-    </button>
-    <button id="unpause-sw-btn" onclick="unpause_sw()" type="button" class="btn btn-success d-none">
-        Unpause <i class="bi bi-play-circle"></i>
-    </button>
-    <button id="stop-sw-btn" onclick="stop_sw()" type="submit" class="btn btn-danger">
-        Stop <i class="bi bi-stop-circle"></i>
-    </button>
-</form>
 
 <script>
         
@@ -55,70 +59,20 @@
         return time;
     }
 
-    var started = false, startedDate;
+    var startedDate;
     var paused = false, pausedDate, pausedTime = 0;
     var intervalId;
     var taskDescription;
+</script>
 
-    function upd_elapsed_time() {
-        let time = new Date() - startedDate - pausedTime;
-        let timeText = milliseconds_to_miliary(time);
-        document.getElementById("seconds-submit").value = Math.floor(time/1000);
-        document.getElementById("time-elapsed").innerText = timeText;
-        document.getElementById("time-elapsed").textContent = timeText;
-    }
-
-    function start_sw() {
-        let inactiveInput = document.getElementById('inactive-input');
-        let activeInput = document.getElementById('active-input');
-
-        taskDescription = document.getElementById("description-inactive").value;
-        document.getElementById("description-active").value = taskDescription;
-        
-        selectedWork = document.getElementById("selected-work").value;
-        document.getElementById("work").innerText = selectedWork;
-        document.getElementById("work-submit").value = selectedWork;
-
-        startedDate = new Date();
-        document.getElementById("started-submit").value = startedDate.valueOf();
-        intervalId = setInterval(upd_elapsed_time,1000)
-        inactiveInput.classList.add('d-none');
-        activeInput.classList.remove('d-none');
-        pausedTime = 0;
-    }
-
-    function pause_sw() {
-        let pauseBtn = document.getElementById('pause-sw-btn');
-        let unpauseBtn = document.getElementById('unpause-sw-btn');
-        
-        pausedDate = new Date();
-        pauseBtn.classList.add('d-none');
-        unpauseBtn.classList.remove('d-none');
-        clearInterval(intervalId);
-    }
-
-    function unpause_sw() {
-        let pauseBtn = document.getElementById('pause-sw-btn');
-        let unpauseBtn = document.getElementById('unpause-sw-btn');
-            
-        pauseBtn.classList.remove('d-none');
-        unpauseBtn.classList.add('d-none');
-        pausedTime += new Date() - pausedDate;
-        intervalId = setInterval(upd_elapsed_time,1000);
-    }
-
-    function stop_sw() {
-        let inactiveInput = document.getElementById('inactive-input');
-        let activeInput = document.getElementById('active-input');
-
-        document.getElementById("time-elapsed").innerText = "00:00:00";
-        document.getElementById("time-elapsed").textContent = "00:00:00";
-        clearInterval(intervalId);
-
-        inactiveInput.classList.remove('d-none');
-        activeInput.classList.add('d-none');
-    }
-
+<script type="module">
+    import { createApp } from 'https://unpkg.com/petite-vue?module'
+    createApp({
+        $delimiters: ['${', '}'],
+        started: false,
+        description: "",
+        work: "PPS"
+    }).mount()
 </script>
 
 {{end}}
