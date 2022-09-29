@@ -21,6 +21,7 @@ func main() {
 	}
 
 	http.HandleFunc("/", serveIndex)
+	http.HandleFunc("/submit", handleSubmit)
 
 	log.Printf("Listening on %s", addr)
 	err = http.ListenAndServe(addr, nil)
@@ -30,11 +31,6 @@ func main() {
 }
 
 func serveIndex(w http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodPost {
-		handleSubmit(w, r)
-		return
-	}
-
 	tmpl, err := template.ParseFS(os.DirFS("./templates"), "*")
 
 	if err != nil {
@@ -45,7 +41,12 @@ func serveIndex(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = tmpl.ExecuteTemplate(w, "layout", nil)
+	type Data struct {
+		Results []database.Entry
+	}
+	data := Data{}
+	database.DB.Find(&data.Results)
+	err = tmpl.ExecuteTemplate(w, "layout", data)
 	if err != nil {
 		log.Println(err.Error())
 		http.Error(w, http.StatusText(500), 500)
@@ -73,6 +74,5 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 			Started:     started,
 			Work:        work,
 		})
-	r.Method = http.MethodGet
-	serveIndex(w, r)
+	http.Redirect(w, r, "/", http.StatusFound)
 }

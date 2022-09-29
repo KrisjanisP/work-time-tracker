@@ -1,23 +1,23 @@
 {{define "entry-history"}}
-<template id="entry-template">
-    <div class="input-group mb-3">
-        <div class="form-control flex-grow-0 w-auto">
-        Time: 
-        </div>
-        <div class="form-control flex-grow-0 w-auto">
-        Started: 
-        </div>
-        <span type="text" class="form-control">
-        Description: 
-        </span>
-        <span class="form-control flex-grow-0 w-auto">
-        
-        </span>
-        <button @click="hello" type="button" class="btn btn-secondary">
-        Edit <i class="bi bi-pencil"></i>
-        </button>
+{{range .Results}}
+<div class="input-group mb-3">
+    <div class="form-control flex-grow-0 w-auto">
+    Time: {{.Seconds}}
     </div>
-</template>
+    <div class="form-control flex-grow-0 w-auto">
+    Started: {{.Started}}
+    </div>
+    <span type="text" class="form-control">
+    Description: {{.Description}} 
+    </span>
+    <span class="form-control flex-grow-0 w-auto">
+    {{.Work}}
+    </span>
+    <button @click="hello" type="button" class="btn btn-secondary">
+    Edit <i class="bi bi-pencil"></i>
+    </button>
+</div>
+{{end}}
 
 <template id="edit-template">
     <form class="row border g-3 m-0 p-2">
