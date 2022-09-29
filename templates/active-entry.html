@@ -8,7 +8,7 @@
             <option value="LU MD">LU MD</option>
             <option value="PPS">PPS</option>
         </select>
-        <button id="start-sw-btn" @click="started=true;" type="button" class="btn btn-success">
+        <button id="start-sw-btn" @click="start()" type="button" class="btn btn-success">
             Start <i class="bi bi-play-circle"></i>
         </button>
     </div>
@@ -26,7 +26,7 @@
         <input v-model="work" type="hidden" name="work">
 
         <!-- Started -->
-        <input id="started-submit" type="hidden" name="started" value="">
+        <input v-model="startedTimestamp" id="started-submit" type="hidden" name="started" value="">
         <button id="pause-sw-btn" onclick="pause_sw()" type="button" class="btn btn-warning">
             Pause <i class="bi bi-pause-circle"></i>
         </button>
@@ -70,8 +70,13 @@
     createApp({
         $delimiters: ['${', '}'],
         started: false,
+        startedTimestamp:0,
         description: "",
-        work: "PPS"
+        work: "PPS",
+        start() {
+            this.started = true;
+            this.startedTimestamp = Math.floor(new Date().valueOf()/1000)
+        }
     }).mount()
 </script>
 

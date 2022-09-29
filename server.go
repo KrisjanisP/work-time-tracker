@@ -59,7 +59,9 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 	seconds, err := strconv.Atoi(r.Form.Get("seconds"))
 	started, err := strconv.Atoi(r.Form.Get("started"))
 	if err != nil {
+		log.Println(err.Error())
 		http.Error(w, http.StatusText(500), 500)
+		return
 	}
 	description := r.Form.Get("description")
 	work := r.Form.Get("work")
@@ -71,5 +73,6 @@ func handleSubmit(w http.ResponseWriter, r *http.Request) {
 			Started:     started,
 			Work:        work,
 		})
-	http.Redirect(w, r, "/", http.StatusSeeOther)
+	r.Method = http.MethodGet
+	serveIndex(w, r)
 }
