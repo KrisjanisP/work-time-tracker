@@ -16,7 +16,7 @@
     <form class="input-group mb-3 d-none" action="/submit" method="post" @vue:mounted="$el.classList.remove('d-none')" v-if="started">
         <!-- Elapsed Time -->
         <div class="form-control flex-grow-0 w-auto"> Elapsed: <span id="time-elapsed">00:00:00</span> </div>
-        <input id="seconds-submit" type="hidden" name="seconds" value="0">
+        <input v-model="total_time" type="hidden" name="seconds" value="0">
 
         <!-- Task Description -->
         <input v-model="description" type="text" class="form-control" placeholder="Task Description" name="description">
@@ -74,6 +74,7 @@
         unpaused_timestamp: 0,
 
         prev_time: 0,
+        total_time: 0,
 
         description: "",
         work: "PPS",
@@ -97,6 +98,7 @@
         updateElapsed() {
             if(this.paused) return;
             let time = curr_timestamp() - this.unpaused_timestamp + this.prev_time;
+            this.total_time = time;
             let elapsedText = milliseconds_to_miliary(time);
             document.getElementById('time-elapsed').innerText = elapsedText;
         }
