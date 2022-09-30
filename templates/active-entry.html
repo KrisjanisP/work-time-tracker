@@ -26,11 +26,11 @@
         <input v-model="work" type="hidden" name="work">
 
         <!-- Started -->
-        <input v-model="startedTimestamp" id="started-submit" type="hidden" name="started" value="">
-        <button @click="pause()" type="button" class="btn btn-warning">
+        <input v-model="started_timestamp" id="started-submit" type="hidden" name="started" value="">
+        <button @click="pause()" v-if="!paused" type="button" class="btn btn-warning">
             Pause <i class="bi bi-pause-circle"></i>
         </button>
-        <button @click="unpause()" type="button" class="btn btn-success d-none">
+        <button @click="unpause()" v-if="paused" type="button" class="btn btn-success">
             Unpause <i class="bi bi-play-circle"></i>
         </button>
         <button type="submit" class="btn btn-primary">
@@ -60,26 +60,43 @@
         return time;
     }
 
+    function curr_timestamp() {
+        return new Date().valueOf();
+    }
+
     createApp({
         $delimiters: ['${', '}'],
+
         started: false,
-        startedTimestamp:0,
+        started_timestamp: 0,
+        
+        paused: false,
+        unpaused_timestamp: 0,
+
+        prev_time: 0,
+
         description: "",
         work: "PPS",
+        
         intervalId: -1,
+        
         start() {
             this.started = true;
-            this.startedTimestamp = Math.floor(new Date().valueOf()/1000);
+            this.started_timestamp = curr_timestamp();
+            this.unpaused_timestamp = this.started_timestamp;
             this.interval = setInterval(this.updateElapsed,100);
         },
         pause() {
-            alert("pause");
+            this.paused = true;
+            this.prev_time += curr_timestamp() - this.unpaused_timestamp;
         },
         unpause() {
-            alert("unpause");
+            this.unpaused_timestamp = curr_timestamp();
+            this.paused = false;
         },
         updateElapsed() {
-            let time = new Date().valueOf() - this.startedTimestamp*1000;
+            if(this.paused) return;
+            let time = curr_timestamp() - this.unpaused_timestamp + this.prev_time;
             let elapsedText = milliseconds_to_miliary(time);
             document.getElementById('time-elapsed').innerText = elapsedText;
         }
