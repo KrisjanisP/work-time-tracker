@@ -27,23 +27,24 @@
 
         <!-- Started -->
         <input v-model="startedTimestamp" id="started-submit" type="hidden" name="started" value="">
-        <button id="pause-sw-btn" onclick="pause_sw()" type="button" class="btn btn-warning">
+        <button @click="pause()" type="button" class="btn btn-warning">
             Pause <i class="bi bi-pause-circle"></i>
         </button>
-        <button id="unpause-sw-btn" onclick="unpause_sw()" type="button" class="btn btn-success d-none">
+        <button @click="unpause()" type="button" class="btn btn-success d-none">
             Unpause <i class="bi bi-play-circle"></i>
         </button>
-        <button id="submit-sw-btn" type="submit" class="btn btn-primary">
+        <button type="submit" class="btn btn-primary">
             Save <i class="bi bi-save"></i>
         </button>
-        <button id="stop-sw-btn" @click="started=false;" type="button" class="btn btn-danger d-none">
+        <button @click="started=false;" type="button" class="btn btn-danger d-none">
             Cancel <i class="bi bi-stop-circle"></i>
         </button>
     </form>
 </div>
 
-<script>
-        
+<script type="module">
+    import { createApp } from 'https://unpkg.com/petite-vue?module'
+
     function milliseconds_to_miliary(milliseconds) {
         let seconds = Math.floor(milliseconds/1000);
         let s = seconds%60;
@@ -59,25 +60,31 @@
         return time;
     }
 
-    var startedDate;
-    var paused = false, pausedDate, pausedTime = 0;
-    var intervalId;
-    var taskDescription;
-</script>
-
-<script type="module">
-    import { createApp } from 'https://unpkg.com/petite-vue?module'
     createApp({
         $delimiters: ['${', '}'],
         started: false,
         startedTimestamp:0,
         description: "",
         work: "PPS",
+        intervalId: -1,
         start() {
             this.started = true;
-            this.startedTimestamp = Math.floor(new Date().valueOf()/1000)
+            this.startedTimestamp = Math.floor(new Date().valueOf()/1000);
+            this.interval = setInterval(this.updateElapsed,100);
+        },
+        pause() {
+            alert("pause");
+        },
+        unpause() {
+            alert("unpause");
+        },
+        updateElapsed() {
+            let time = new Date().valueOf() - this.startedTimestamp*1000;
+            let elapsedText = milliseconds_to_miliary(time);
+            document.getElementById('time-elapsed').innerText = elapsedText;
         }
     }).mount()
+
 </script>
 
 {{end}}
